@@ -1,0 +1,18 @@
+<h3>Editar Postagem: </h3>
+<div class="card">
+  <div class="card-body">
+    <form action="/admin/postagem/edit" method="post">
+        <div class="mb-3">
+            <label for="nome">Titulo</label>
+            <input type="text" class="form-control" name="titulo" value="{{postagens.titulo}}" placeholder="Titulo">
+        </div>
+        <div class="mb-3">
+            <label for="slug">Descrição</label>
+            <input type="text" class="form-control" name="descricao" value="{{postagens.descricao}}" placeholder="Descrição">
+        </div>
+        <br />
+        <input type="hidden" name="id" value="{{postagens._id}}">
+        <button type="submit" class="btn btn-success">Editar Postagem</button>
+    </form>
+  </div>
+</div>
