@@ -20,7 +20,7 @@ const PostagemSchema = new mongoose.Schema({
         required: true
     },
     imagem: {
-        type: String,
+        type: String
     },
     date: {
         type: Date,

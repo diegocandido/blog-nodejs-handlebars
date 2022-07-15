@@ -1,25 +1,25 @@
 const multer = require('multer')
-const path = require('path')
 const crypto = require('crypto')
 
 module.exports = {
 
-    dest: path.resolve(__dirname, '..', '..', 'tmp', 'uploads'),
-    storage: multer.diskStorage({
-            destination: (req, file, cb) => {
-                cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'uploads'))
-            },
-            filename: (req, file, cb) => {
-                crypto.ramdomBytes(16, (err, hash ) => {
-                    const fileName = `${hash.toString('hex')}`.jpg
-                
-                    cb(null, fileName)
-                })
-            },
+    storage : multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, '../uploads/')
+        },
+        filename: function (req, file, cb) {
+            // Extração da extensão do arquivo original:
+            const extensaoArquivo = file.originalname.split('.')[1];
+    
+            // Cria um código randômico que será o nome do arquivo
+            const novoNomeArquivo = require('crypto')
+                .randomBytes(64)
+                .toString('hex');
+    
+            // Indica o novo nome do arquivo:
+            cb(null, `${novoNomeArquivo}.${extensaoArquivo}`)
+        }
     }),
-    limits: {
-        fileSize: 2 * 1024 * 1024
-    },
     fileFilter: (req, file, cb) => {
         const allowedMimes = [
             'image/jpeg',

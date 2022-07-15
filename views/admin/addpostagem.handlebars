@@ -3,29 +3,34 @@
   <div class="card-body">
     <form action="/admin/postagem/nova" enctype="multipart/form-data" method="post">
         <div class="mb-3">
-            <label for="titulo">Titulo</label>
+            <label for="titulo">Título</label>
             <input type="text" class="form-control" name="titulo" placeholder="Titulo">
         </div>
         <div class="mb-3">
-            <label for="slug">Descricao</label>
+            <label for="slug">Descrição</label>
             <input type="text" class="form-control" name="descricao" placeholder="Descrição">
+        </div>
+        <div class="mb-3">
+          <label for="slug">Categoria</label>
+          <select class="custom-select" name="categoria">
+          {{#each categorias}}
+                  <option selected>Todas as Categorias</option>
+                  <option value="{{_id}}">{{nome}}</option>
+          {{else}}
+          <option selected>Nenhuma categoria criada</option>
+          {{/each}}
+        </select>
+        </div>
+        <div class="mb-3">
+            <label for="slug">Conteúdo</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
         </div>
          <div class="mb-3">
             <label for="slug">Imagem</label>
-            <input type="file" class="form-control-file" name="uploaded_file">
+            <input type="file" class="form-control-file" name="img">
         </div>
         
-        <br />
-        <select class="custom-select" name="categoria">
-        {{#each categorias}}
-                <option selected>Todas as Categorias</option>
-                <option value="{{_id}}">{{nome}}</option>
-        {{else}}
-        <option selected>Nenhuma categoria criada</option>
-        {{/each}}
-        </select>
-        <br />
-        <button type="submit" class="btn btn-success">Criar postagem</button>
+        <button type="submit" class="btn btn-success mt-4">Criar postagem</button>
     </form>
   </div>
 </div>

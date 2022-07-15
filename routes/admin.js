@@ -1,15 +1,26 @@
 const express = require('express')
 const router = express.Router();
 const mongoose = require('mongoose')
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
-const multerConfig = require("../config/multer")
+const multer = require('multer')
 
 const { eAdmin } = require("../helpers/eAdmin")
 
 //Arquivos Models
 const { categorias } = require("../models/Categoria")
 const { postagens } = require("../models/Postagem")
+
+
+// Configuração de armazenamento
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now()+'-'+file.originalname)
+    }
+});
+
+const upload = multer({storage: storage});
 
 
 // Rotas Categorias
@@ -83,15 +94,16 @@ router.get('/postagem/add', eAdmin, (req,res) =>{
         res.render('admin/addpostagem', {categorias: categorias})
     })
 })
-router.post('/postagem/nova', upload.single('uploaded_file') , eAdmin, (req,res) =>{
+router.post('/postagem/nova', upload.single('img'), eAdmin, (req,res) =>{
     const novaPostagem = new postagens({
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         categoria: req.body.categoria,
-        imagem: req.file.fileName
+        imagem: req.file.filename
     })
-   novaPostagem.save();
-   req.flash("success_msg", "Postagem realizada com sucesso")
+    novaPostagem.save();
+    console.log(novaPostagem)
+    req.flash("success_msg", "Postagem realizada com sucesso")
    res.redirect('/admin/postagens')
 })
 
