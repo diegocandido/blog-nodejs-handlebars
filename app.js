@@ -11,7 +11,6 @@ const moment = require("moment");
 
 // Models
 const { postagens } = require("./models/Postagem")
-const { categorias } = require("./models/Categoria")
 
 // Passport de autenticacao
 require("./config/auth")(passport)
@@ -20,8 +19,9 @@ require("./config/auth")(passport)
 require('dotenv').config();
 
 // Rotas
-const admin = require('./routes/admin');
+const postagem = require('./routes/postagem');
 const usuario = require('./routes/usuario');
+const categoria = require('./routes/categoria');
 
 // Encoded
 app.use(express.urlencoded({extended: true})); 
@@ -38,7 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-
+// Template Engine
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
@@ -50,8 +50,9 @@ const imagemPath = path.join(__dirname, '/uploads');
 app.use("/uploads",express.static(imagemPath));
 
 // Rotas
-app.use('/admin', admin)
+app.use('/admin', postagem)
 app.use('/admin', usuario)
+app.use('/admin', categoria)
 
 // Middleware
 app.use((req,res,next) => {
@@ -94,7 +95,7 @@ app.get('/:id', (req, res) => {
 });
 
 app.get("/404", (req,res) => {
-    res.send("Erro 404! :(")
+    res.send('Erro 404')
 })
 
 app.listen(PORT, () => {
