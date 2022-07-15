@@ -19,6 +19,9 @@ const PostagemSchema = new mongoose.Schema({
         ref: 'categorias',
         required: true
     },
+    imagem: {
+        type: String,
+    },
     date: {
         type: Date,
         default: Date.now

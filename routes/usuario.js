@@ -3,23 +3,25 @@ const router = express.Router();
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
+const { eAdmin } = require("../helpers/eAdmin")
+
 //Arquivos Models
 const { usuarios } = require("../models/Usuario");
 const passport = require('passport');
 
 
 // Rotas 
-router.get('/registro', (req,res) =>{
+router.get('/registro', eAdmin, (req,res) =>{
     usuarios.find().lean().then((usuarios) =>{
         res.render('usuario/registro', {usuarios: usuarios})
     })
 })
 
-router.get('/registro/add', (req,res) =>{
+router.get('/registro/add', eAdmin, (req,res) =>{
     res.render('usuario/addusuario')
 })
 
-router.post('/registro/nova', (req,res) =>{
+router.post('/registro/nova', eAdmin, (req,res) =>{
     let erros = []
 
     if(!req.body.nome || req.body.nome == undefined || req.body.nome == null){
@@ -70,6 +72,13 @@ router.post('/registro/nova', (req,res) =>{
             failureRedirect: "login",
             failureFlash: true
         })(req, res, next)
+    })
+
+    router.get("/logout", (req, res, next) => {
+        req.logout((err) => {
+            req.flash('success_msg', "Deslogado com sucesso!")
+            res.redirect("/")
+        })
     })
 
 module.exports = router;

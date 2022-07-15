@@ -7,6 +7,7 @@ const handlebars = exphbs.create({});
 const mongoose = require('mongoose');
 const path = require('path');
 const passport = require("passport");
+const moment = require("moment");
 
 const { postagens } = require("./models/Postagem")
 const { categorias } = require("./models/Categoria")
@@ -54,6 +55,8 @@ app.use((req,res,next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error =req.flash("error")
+    res.locals.user = req.user || null;
+    res.locals.moment = moment;
     next();
 });
 

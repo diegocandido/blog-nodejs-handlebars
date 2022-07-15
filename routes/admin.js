@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router();
 const mongoose = require('mongoose')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const multerConfig = require("../config/multer")
+
+const { eAdmin } = require("../helpers/eAdmin")
 
 //Arquivos Models
 const { categorias } = require("../models/Categoria")
@@ -8,17 +13,17 @@ const { postagens } = require("../models/Postagem")
 
 
 // Rotas Categorias
-router.get('/categorias', (req,res) =>{
+router.get('/categorias', eAdmin, (req,res) =>{
     categorias.find().lean().then((categorias) =>{
         res.render('admin/categorias', {categorias: categorias})
     })
 })
 
-router.get('/categorias/add', (req,res) =>{
+router.get('/categorias/add', eAdmin, (req,res) =>{
     res.render('admin/addcategoria')
 })
 
-router.post('/categoria/nova', (req,res) =>{
+router.post('/categoria/nova', eAdmin, (req,res) =>{
     
     let erros = []
 
@@ -41,13 +46,13 @@ router.post('/categoria/nova', (req,res) =>{
     }
 })
 
-router.get('/categorias/edit/:id', (req,res) =>{
+router.get('/categorias/edit/:id', eAdmin, (req,res) =>{
     categorias.findOne({_id:req.params.id}).lean().then((categorias) =>{
         res.render('admin/editcategoria', {categorias: categorias})
     })     
 })
 
-router.post('/categorias/edit', (req,res) =>{
+router.post('/categorias/edit', eAdmin, (req,res) =>{
     let filter = { _id: req.body.id }
     let update = { nome: req.body.nome, slug: req.body.slug }
     categorias.findOneAndUpdate(filter, update).then(() => {
@@ -58,7 +63,7 @@ router.post('/categorias/edit', (req,res) =>{
     })
 })
 
-router.post('/categoria/apagar', (req,res) => {
+router.post('/categoria/apagar', eAdmin, (req,res) => {
     categorias.deleteOne({
         _id: req.body.id
     }).then(() =>{
@@ -68,34 +73,35 @@ router.post('/categoria/apagar', (req,res) => {
 })
 
 // Rotas Postagens
-router.get('/postagens', (req,res) =>{
+router.get('/postagens', eAdmin, (req,res) =>{
     postagens.find().populate("categoria").sort({date:"desc"}).lean().then((postagens) =>{
         res.render('admin/postagens', { postagens: postagens })
     })
 })
-router.get('/postagem/add', (req,res) =>{
+router.get('/postagem/add', eAdmin, (req,res) =>{
     categorias.find().lean().then((categorias) =>{
         res.render('admin/addpostagem', {categorias: categorias})
     })
 })
-router.post('/postagem/nova', (req,res) =>{
+router.post('/postagem/nova', upload.single('uploaded_file') , eAdmin, (req,res) =>{
     const novaPostagem = new postagens({
         titulo: req.body.titulo,
         descricao: req.body.descricao,
-        categoria: req.body.categoria
+        categoria: req.body.categoria,
+        imagem: req.file.fileName
     })
    novaPostagem.save();
    req.flash("success_msg", "Postagem realizada com sucesso")
    res.redirect('/admin/postagens')
 })
 
-router.get('/postagem/edit/:id', (req,res) =>{
+router.get('/postagem/edit/:id', eAdmin, (req,res) =>{
     postagens.findOne({_id:req.params.id}).lean().then((postagens) =>{
         res.render('admin/editpostagem', {postagens: postagens})
     })
 })
 
-router.post('/postagem/edit', (req,res) =>{
+router.post('/postagem/edit', eAdmin, (req,res) =>{
     let filter = { _id: req.body.id }
     let update = { titulo: req.body.titulo, descricao: req.body.descricao }
     postagens.findOneAndUpdate(filter, update).then(() => {
@@ -106,7 +112,7 @@ router.post('/postagem/edit', (req,res) =>{
     })
 })
 
-router.get('/postagem/apagar/:id', (req,res) => {
+router.get('/postagem/apagar/:id', eAdmin, (req,res) => {
     postagens.remove({
         _id: req.params.id
     }).then(() =>{

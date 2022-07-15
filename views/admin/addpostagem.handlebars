@@ -1,15 +1,20 @@
 <h3>Nova Postagem: </h3>
 <div class="card">
   <div class="card-body">
-    <form action="/admin/postagem/nova" method="post">
+    <form action="/admin/postagem/nova" enctype="multipart/form-data" method="post">
         <div class="mb-3">
             <label for="titulo">Titulo</label>
             <input type="text" class="form-control" name="titulo" placeholder="Titulo">
         </div>
         <div class="mb-3">
-            <label for="slug">Slug</label>
+            <label for="slug">Descricao</label>
             <input type="text" class="form-control" name="descricao" placeholder="Descrição">
         </div>
+         <div class="mb-3">
+            <label for="slug">Imagem</label>
+            <input type="file" class="form-control-file" name="uploaded_file">
+        </div>
+        
         <br />
         <select class="custom-select" name="categoria">
         {{#each categorias}}

@@ -6,14 +6,32 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#">Home</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Categorias</a>
       </li>
     </ul>
+
+{{#if user}}
+
+<span class="navbar-text">
+      <a class="nav-link" href="/admin/postagens">POSTAGENS</a>
+</span>
+<span class="navbar-text">
+      <a class="nav-link" href="/admin/categorias">CATEGORIAS</a>
+</span>
+
+<span class="navbar-text">
+      <a class="nav-link" href="/admin/logout">SAIR</a>
+</span>
+
+{{else}}
+
     <span class="navbar-text">
-      LOGIN
+      <a class="nav-link" href="/admin/login">LOGIN</a>
     </span>
+
+{{/if}}    
   </div>
 </nav>
