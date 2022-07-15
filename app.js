@@ -9,6 +9,7 @@ const path = require('path');
 const passport = require("passport");
 const moment = require("moment");
 
+// Models
 const { postagens } = require("./models/Postagem")
 const { categorias } = require("./models/Categoria")
 
@@ -18,7 +19,6 @@ require("./config/auth")(passport)
 // ENV com dados do Mongo
 require('dotenv').config();
 
-
 // Rotas
 const admin = require('./routes/admin');
 const usuario = require('./routes/usuario');
@@ -27,7 +27,7 @@ const usuario = require('./routes/usuario');
 app.use(express.urlencoded({extended: true})); 
 app.use(express.json());
 
-//Sessao
+// Sessao
 app.use(session({
     secret:"blog-em-node-js",
     resave: true,
@@ -42,15 +42,18 @@ app.use(flash());
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
-//Public Functions
-app.use(express.static(path.join( __dirname, 'public' )));
-//app.use(bodyparser.urlencoded({extended : true }));
+// Public Functions
+app.use(express.static(path.join( __dirname, '/public' )));
 
-//Rotas
+// Diretorio das Imagens
+const imagemPath = path.join(__dirname, '/uploads');
+app.use("/uploads",express.static(imagemPath));
+
+// Rotas
 app.use('/admin', admin)
 app.use('/admin', usuario)
 
-//Middleware
+// Middleware
 app.use((req,res,next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -59,7 +62,6 @@ app.use((req,res,next) => {
     res.locals.moment = moment;
     next();
 });
-
 
 // Conecation MongoDB
 const Schema = mongoose.Schema;
@@ -71,17 +73,24 @@ mongoose.connect(process.env.MONGO_DB,
     console.log('Erro ao conectar ao Mongo online')
 });
 
-
+// Porta de acesso
 const PORT = process.env.PORT || 5005
 
-
+// Home page
 app.get('/', (req, res) => {
     postagens.find().populate("categoria").sort({date:"desc"}).lean().then((postagens) =>{
         res.render('home', { postagens: postagens })
     }).catch((err) => {
         res.redirect("/404")
     })
-    
+});
+
+app.get('/:id', (req, res) => {
+    postagens.findOne({slug:req.params.id}).lean().then((postagens) =>{
+        res.render('ler', { postagens: postagens })
+    }).catch((err) => {
+        res.redirect("/404")
+    })
 });
 
 app.get("/404", (req,res) => {

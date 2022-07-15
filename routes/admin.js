@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose')
 const multer = require('multer')
 
+
 const { eAdmin } = require("../helpers/eAdmin")
 
 //Arquivos Models
@@ -17,11 +18,16 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         cb(null, Date.now()+'-'+file.originalname)
-    }
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedMimes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+        ];
+    } 
 });
-
 const upload = multer({storage: storage});
-
 
 // Rotas Categorias
 router.get('/categorias', eAdmin, (req,res) =>{
@@ -35,22 +41,19 @@ router.get('/categorias/add', eAdmin, (req,res) =>{
 })
 
 router.post('/categoria/nova', eAdmin, (req,res) =>{
-    
     let erros = []
-
     if(!req.body.nome || req.body.nome == undefined || req.body.nome == null){
         erros.push({texto: "Nome inválido"}) 
     }
-    if(!req.body.slug || req.body.slug == undefined || req.body.slug == null){
+    else if(!req.body.slug || req.body.slug == undefined || req.body.slug == null){
         erros.push({texto: "Slug inválido"}) 
     }
-    if(erros.length > 0){
+    else if(erros.length > 0){
         res.render("admin/addcategoria", {erros: erros})
     }else{
         const novaCategoria = new categorias({
             nome: req.body.nome,
             slug: req.body.slug
-
             })
         novaCategoria.save();
         res.redirect('/admin/categorias')
@@ -97,12 +100,12 @@ router.get('/postagem/add', eAdmin, (req,res) =>{
 router.post('/postagem/nova', upload.single('img'), eAdmin, (req,res) =>{
     const novaPostagem = new postagens({
         titulo: req.body.titulo,
+        slug: req.body.titulo.toLowerCase().split(" ").join("-"),
         descricao: req.body.descricao,
         categoria: req.body.categoria,
-        imagem: req.file.filename
+        imagem: req.file.filename.toLowerCase().split(" ").join("-")
     })
     novaPostagem.save();
-    console.log(novaPostagem)
     req.flash("success_msg", "Postagem realizada com sucesso")
    res.redirect('/admin/postagens')
 })
@@ -125,7 +128,7 @@ router.post('/postagem/edit', eAdmin, (req,res) =>{
 })
 
 router.get('/postagem/apagar/:id', eAdmin, (req,res) => {
-    postagens.remove({
+    postagens.deleteOne({
         _id: req.params.id
     }).then(() =>{
         req.flash("success_msg", "Postagem apagada com sucesso")

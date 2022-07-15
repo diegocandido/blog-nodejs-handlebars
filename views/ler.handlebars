@@ -1,0 +1,33 @@
+
+  <main class="container">
+    <div class="row g-5">
+      <div class="col-md-8">
+        <article class="blog-post">
+          <h2 class="blog-post-title mb-1">{{postagens.titulo}}</h2>
+          <p class="blog-post-meta"></p>
+          <p>{{postagens.descricao}}</p>
+          <hr>
+          <img src="/uploads/{{postagens.imagem}}" width="100%" alt="">
+          <p>{{postagens.conteudo}}</p>
+        </article>
+      </div>
+      <div class="col-md-4">
+        <div class="position-sticky" style="top: 2rem;">
+          <div class="p-4 mb-3 bg-light rounded">
+            <h4 class="fst-italic">Sobre</h4>
+            <p class="mb-0">
+              Aplicação de blog totalmente feito em NodeJS, usado o ExpressJS com o banco de dados MongoDB e a template engine do Handlebars integrado com o bootstrap.
+            </p>
+          </div>
+          <div class="p-4">
+            <h4 class="fst-italic">Redes Sociais</h4>
+            <ol class="list-unstyled">
+              <li><a href="https://github.com/diegocandido" target="_blank">GitHub</a></li>
+              <li><a href="https://www.youtube.com/diegocandido" target="_blank">Youtube</a></li>
+              <li><a href="https://www.diegocandido.com/" target="_blank">Site</a></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
