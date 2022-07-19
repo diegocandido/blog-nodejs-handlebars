@@ -8,6 +8,11 @@ Por [Diego Candido](https://diegocandido.com)
 Montei esse projeto básico para usar NodeJS e MongoDB com uma template engine, nesse projeto usei o Handlebars.
 
 
+## Imagem da construção do Blog
+
+![img](https://user-images.githubusercontent.com/1766790/179835732-c4aff040-7eec-4476-9490-b803129d3c9e.jpg)
+
+
 ## Tutorial do Blog em NodeJS
 
 Montei uma sequência de vídeos explicando a montagem desse projeto: 
