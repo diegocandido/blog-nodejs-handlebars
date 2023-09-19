@@ -11,17 +11,17 @@ const passport = require('passport');
 
 
 // Rotas 
-router.get('/registro', eAdmin, (req,res) =>{
+router.get('/usuarios', eAdmin, (req,res) =>{
     usuarios.find().lean().then((usuarios) =>{
         res.render('usuario/registro', {usuarios: usuarios})
     })
 })
 
-router.get('/registro/add', eAdmin, (req,res) =>{
+router.get('/usuario/add', eAdmin, (req,res) =>{
     res.render('usuario/addusuario')
 })
 
-router.post('/registro/nova', eAdmin, (req,res) =>{
+router.post('/usuario/nova', eAdmin, (req,res) =>{
     let erros = []
 
     if(!req.body.nome || req.body.nome == undefined || req.body.nome == null){
@@ -57,7 +57,7 @@ router.post('/registro/nova', eAdmin, (req,res) =>{
                 novoUsuario.save();
 
         
-        res.redirect('/admin/registro')
+        res.redirect('/admin/usuario')
         }
     })
         

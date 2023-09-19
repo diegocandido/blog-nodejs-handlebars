@@ -79,7 +79,8 @@ const PORT = process.env.PORT || 5005
 
 // Home page
 app.get('/', (req, res) => {
-    postagens.find().populate("categoria").sort({date:"desc"}).lean().then((postagens) =>{
+    postagens.find().populate("categoria").sort({date:"desc"})
+    .lean().then((postagens) =>{
         res.render('home', { postagens: postagens })
     }).catch((err) => {
         res.redirect("/404")
